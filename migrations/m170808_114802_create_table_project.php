@@ -8,8 +8,8 @@ class m170808_114802_create_table_project extends Migration
     public function safeUp()
     {
         $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB';
-        // Users table
-        $this->createTable('{{%projects}}', [
+        // project table
+        $this->createTable('{{%project}}', [
             'id' => Schema::TYPE_PK,
             'name' => Schema::TYPE_STRING ."(128)",
             'description' => Schema::TYPE_TEXT,
@@ -23,7 +23,7 @@ class m170808_114802_create_table_project extends Migration
 
     public function safeDown()
     {
-        $this->dropTable('{{%projects}}');
+        $this->dropTable('{{%project}}');
     }
 
     /*

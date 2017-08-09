@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "{{%projects}}".
+ * This is the model class for table "{{%project}}".
  *
  * @property integer $id
  * @property string $name
@@ -15,14 +15,14 @@ use Yii;
  * @property string $update_time
  * @property integer $update_user_id
  */
-class Projects extends \yii\db\ActiveRecord
+class Project extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%projects}}';
+        return '{{%project}}';
     }
 
     /**

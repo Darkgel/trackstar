@@ -2,18 +2,22 @@
 
 namespace app\controllers;
 
-use Yii;
 use app\models\Project;
+use Yii;
+use app\models\Issue;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProjectController implements the CRUD actions for Projects model.
+ * IssueController implements the CRUD actions for Issue model.
  */
-class ProjectController extends Controller
+class IssueController extends Controller
 {
+    //Issue所属的Project
+    private $_project = null;
+
     /**
      * @inheritdoc
      */
@@ -29,14 +33,29 @@ class ProjectController extends Controller
         ];
     }
 
+    public function beforeAction($action)
+    {
+        return parent::beforeAction($action);
+    }
+
+    private function loadProject($projectId){
+        if($this->_project === null){
+            $this->_project = Project::findOne($projectId);
+            if($this->_project === null){
+                throw new NotFoundHttpException('The requested project does not exit!', 404);
+            }
+        }
+        return $this->_project;
+    }
+
     /**
-     * Lists all Projects models.
+     * Lists all Issue models.
      * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Project::find(),
+            'query' => Issue::find(),
         ]);
 
         return $this->render('index', [
@@ -45,7 +64,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Displays a single Projects model.
+     * Displays a single Issue model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +76,13 @@ class ProjectController extends Controller
     }
 
     /**
-     * Creates a new Projects model.
+     * Creates a new Issue model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Project();
+        $model = new Issue();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +94,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Updates an existing Projects model.
+     * Updates an existing Issue model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,7 +113,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Deletes an existing Projects model.
+     * Deletes an existing Issue model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +126,15 @@ class ProjectController extends Controller
     }
 
     /**
-     * Finds the Projects model based on its primary key value.
+     * Finds the Issue model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Project the loaded model
+     * @return Issue the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Project::findOne($id)) !== null) {
+        if (($model = Issue::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
