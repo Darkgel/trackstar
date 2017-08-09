@@ -9,6 +9,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\components\ProjectContextFilter;
 
 /**
  * IssueController implements the CRUD actions for Issue model.
@@ -30,15 +31,16 @@ class IssueController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'filterProjectContext' => [
+                'class' => ProjectContextFilter::className(),
+                'only'=>[
+                    'create',
+                ],
+            ],
         ];
     }
 
-    public function beforeAction($action)
-    {
-        return parent::beforeAction($action);
-    }
-
-    private function loadProject($projectId){
+    public  function loadProject($projectId){
         if($this->_project === null){
             $this->_project = Project::findOne($projectId);
             if($this->_project === null){

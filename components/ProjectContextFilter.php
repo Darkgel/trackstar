@@ -12,6 +12,8 @@ use yii\base\ActionFilter;
 
 class ProjectContextFilter extends  ActionFilter
 {
+    private $loadProject = 'loadProject';
+
     public function beforeAction($action)
     {
         $projectId = null;
@@ -22,7 +24,8 @@ class ProjectContextFilter extends  ActionFilter
                 $projectId = $_POST['pid'];
             }
         }
-        $this->owner->loadProject($projectId);
+        call_user_func_array([$this->owner,$this->loadProject],[$projectId]);
+
         return parent::beforeAction($action);
     }
 }
