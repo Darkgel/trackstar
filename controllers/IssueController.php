@@ -85,6 +85,7 @@ class IssueController extends Controller
     public function actionCreate()
     {
         $model = new Issue();
+        $model->project_id = $this->_project->id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

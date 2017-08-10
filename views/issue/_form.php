@@ -17,8 +17,6 @@ use app\models\Issue;
 
     <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'project_id')->textInput() ?>
-
     <?= $form->field($model, 'type_id')->dropDownList(Issue::getTypeArr());?>
 
     <?= $form->field($model, 'status_id')->dropDownList(Issue::getStatusArr());?>

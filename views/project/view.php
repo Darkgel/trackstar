@@ -23,6 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('Create Issue', ['issue/create', 'pid' => $model->id], ['class' => 'btn btn-info pull-right']) ?>
     </p>
 
     <?= DetailView::widget([

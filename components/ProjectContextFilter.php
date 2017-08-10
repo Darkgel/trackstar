@@ -19,11 +19,8 @@ class ProjectContextFilter extends  ActionFilter
         $projectId = null;
         if(isset($_GET['pid'])){
             $projectId = $_GET['pid'];
-        }else{
-            if(isset($_POST['pid'])){
-                $projectId = $_POST['pid'];
-            }
         }
+
         call_user_func_array([$this->owner,$this->loadProject],[$projectId]);
 
         return parent::beforeAction($action);
