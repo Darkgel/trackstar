@@ -6,7 +6,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
+use app\models\LoginFormByLocalAuth;
 use app\models\ContactForm;
 
 class SiteController extends Controller
@@ -66,7 +66,7 @@ class SiteController extends Controller
     /**
      * Login action.
      *
-     * @return string
+     *
      */
     public function actionLogin()
     {
@@ -74,7 +74,14 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        return $this->loginByLocalAuth();
+    }
+
+    /**
+     * 通过本地密码验证方式登录
+     */
+    public function loginByLocalAuth(){
+        $model = new LoginFormByLocalAuth();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }

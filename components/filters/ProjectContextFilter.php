@@ -6,7 +6,7 @@
  * Time: 20:10
  */
 
-namespace app\components;
+namespace app\components\filters;
 
 use yii\base\ActionFilter;
 

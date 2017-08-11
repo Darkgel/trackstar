@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Issue;
 
 /**
  * ProjectController implements the CRUD actions for Projects model.
@@ -51,8 +52,16 @@ class ProjectController extends Controller
      */
     public function actionView($id)
     {
+        $project = $this->findModel($id);
+        $issueDataProvider = new ActiveDataProvider([
+            'query' => Issue::find()->where('project_id=:project_id', [':project_id' => $id, ])->asArray(),
+            'pagination' => [
+                'pageSize' => 2,
+            ],
+        ]);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $project,
+            'issueDataProvider' => $issueDataProvider,
         ]);
     }
 
@@ -120,5 +129,12 @@ class ProjectController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionTest(){
+        $hash0 = Yii::$app->getSecurity()->generatePasswordHash('demo');
+        $hash1 = Yii::$app->getSecurity()->generatePasswordHash('darkgel');
+        echo $hash0.'<br/>'.$hash1;
+
     }
 }

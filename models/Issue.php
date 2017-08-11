@@ -72,14 +72,14 @@ class Issue extends \yii\db\ActiveRecord
             'name' => 'Name',
             'description' => 'Description',
             'project_id' => 'Project ID',
-            'type_id' => 'Type ID',
-            'status_id' => 'Status ID',
-            'owner_id' => 'Owner ID',
-            'requester_id' => 'Requester ID',
+            'type_id' => 'Type',
+            'status_id' => 'Status',
+            'owner_id' => 'Owner',
+            'requester_id' => 'Requester',
             'create_time' => 'Create Time',
-            'create_user_id' => 'Create User ID',
+            'create_user_id' => 'Create User',
             'update_time' => 'Update Time',
-            'update_user_id' => 'Update User ID',
+            'update_user_id' => 'Update User',
         ];
     }
 
@@ -123,4 +123,37 @@ class Issue extends \yii\db\ActiveRecord
             self::STATUS_FINISH => 'Finished',
         ];
     }
+
+    public static function getTypeText($type){
+        $typeText = 'Unknown Type';
+        if(isset(self::getTypeArr()[$type])){
+            $typeText = self::getTypeArr()[$type];
+        }
+
+        return $typeText;
+    }
+
+    public static function getStatusText($status){
+        $statusText = 'Unknown Status';
+        if(isset(self::getStatusArr()[$status])){
+            $statusText = self::getStatusArr()[$status];
+        }
+
+        return $statusText;
+    }
+
+    /**
+     * @param string 'owner' or 'requester'
+     * @return string the text of username
+     * */
+    public function getUsernameText($type){
+        $username = 'Not Set';
+        if($this->$type != null){
+            $username = $this->$type->username;
+        }
+
+        return $username;
+    }
+
+
 }

@@ -9,7 +9,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\components\ProjectContextFilter;
+use app\components\filters\ProjectContextFilter;
 
 /**
  * IssueController implements the CRUD actions for Issue model.
@@ -34,7 +34,7 @@ class IssueController extends Controller
             'filterProjectContext' => [
                 'class' => ProjectContextFilter::className(),
                 'only'=>[
-                    'create',
+                    'create','update',
                 ],
             ],
         ];
@@ -47,6 +47,13 @@ class IssueController extends Controller
                 throw new NotFoundHttpException('The requested project does not exit!', 404);
             }
         }
+        return $this->_project;
+    }
+
+    /**
+     * @return Project the project model instance to which this issue belongs
+      */
+    public function getProject(){
         return $this->_project;
     }
 
@@ -92,6 +99,7 @@ class IssueController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'userOptions' => $this->getProject()->getUserArr(),
             ]);
         }
     }
@@ -111,6 +119,7 @@ class IssueController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'userOptions' => $this->getProject()->getUserArr(),
             ]);
         }
     }

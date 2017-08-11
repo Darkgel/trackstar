@@ -21,17 +21,9 @@ use app\models\Issue;
 
     <?= $form->field($model, 'status_id')->dropDownList(Issue::getStatusArr());?>
 
-    <?= $form->field($model, 'owner_id')->textInput() ?>
+    <?= $form->field($model, 'owner_id')->dropDownList($userOptions) ?>
 
-    <?= $form->field($model, 'requester_id')->textInput() ?>
-
-    <?= $form->field($model, 'create_time')->textInput() ?>
-
-    <?= $form->field($model, 'create_user_id')->textInput() ?>
-
-    <?= $form->field($model, 'update_time')->textInput() ?>
-
-    <?= $form->field($model, 'update_user_id')->textInput() ?>
+    <?= $form->field($model, 'requester_id')->dropDownList($userOptions) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

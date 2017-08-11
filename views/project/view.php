@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\widgets\ListView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Projects */
@@ -38,5 +39,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'update_user_id',
         ],
     ]) ?>
+
+    <hr/>
+    <h3>All Issues</h3>
+    <?= ListView::widget([
+        'dataProvider' => $issueDataProvider,
+        'itemView' => '//issue/_issueListItem',
+        'pager' => [
+            'firstPageLabel' => 'First',
+            'lastPageLabel' => 'Last',
+        ],
+    ]);?>
 
 </div>

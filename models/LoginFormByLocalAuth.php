@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use yii\db\Exception;
 
 /**
  * LoginForm is the model behind the login form.
@@ -11,12 +12,20 @@ use yii\base\Model;
  * @property User|null $user This property is read-only.
  *
  */
-class LoginForm extends Model
+class LoginFormByLocalAuth extends Model
 {
     public $username;
     public $password;
     public $rememberMe = true;
 
+    /**
+     * @var Localauth | bool
+     */
+    private $_userAuth = false;
+
+    /**
+     * @var User | bool
+     */
     private $_user = false;
 
 
@@ -45,9 +54,9 @@ class LoginForm extends Model
     public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $user = $this->getUser();
+            $userAuth = $this->getUserAuth();
 
-            if (!$user || !$user->validatePassword($this->password)) {
+            if (!$userAuth || !$userAuth->validatePassword($this->username ,$this->password)) {
                 $this->addError($attribute, 'Incorrect username or password.');
             }
         }
@@ -68,12 +77,24 @@ class LoginForm extends Model
     /**
      * Finds user by [[username]]
      *
-     * @return User|null
+     * @return Localauth|null
      */
-    public function getUser()
+    public function getUserAuth()
     {
+        if ($this->_userAuth === false) {
+            $this->_userAuth = Localauth::findByUsername($this->username);
+        }
+
+        return $this->_userAuth;
+    }
+
+    public function getUser(){
         if ($this->_user === false) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = User::findOne($this->_userAuth->user_id);
+        }
+
+        if($this->_user === null){
+            throw new Exception('can\'t not find the user record associated to the local auth record!');
         }
 
         return $this->_user;

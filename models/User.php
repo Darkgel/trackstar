@@ -3,6 +3,11 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\base\NotSupportedException;
+use yii\web\IdentityInterface;
+
+
 
 /**
  * This is the model class for table "{{%user}}".
@@ -17,12 +22,11 @@ use Yii;
  * @property string $update_time
  * @property integer $update_user_id
  *
- * @property Issue[] $issues
- * @property Issue[] $issues0
- * @property ProjectUserAssignment[] $projectUserAssignments
+ * @property Issue[] $requestIssues
+ * @property Issue[] $ownIssues
  * @property Project[] $projects
  */
-class User extends \yii\db\ActiveRecord
+class User extends ActiveRecord implements IdentityInterface
 {
     /**
      * @inheritdoc
@@ -86,4 +90,34 @@ class User extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Project::className(), ['id' => 'project_id'])->viaTable('{{%project_user_assignment}}', ['user_id' => 'id']);
     }
+
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException("we don't support this way of login : AccessToken");
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+        throw new NotSupportedException("we don't support this way of login : AuthKey");
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        throw new NotSupportedException("we don't support this way of login : AuthKey");
+    }
+
+    public static function findByUsername($username){
+        return self::find()->where('username=:username', [':username' => $username])->one();
+    }
+
 }

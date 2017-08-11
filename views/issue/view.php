@@ -2,12 +2,13 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\Issue;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Issue */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Issues', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Project', 'url' => ['project/view', 'id' => $model->project_id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="issue-view">
@@ -15,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Update', ['update', 'id' => $model->id, 'pid' => $model->project_id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -29,17 +30,27 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'name',
-            'description',
+            'name:html',
+            'description:html',
             'project_id',
-            'type_id',
-            'status_id',
-            'owner_id',
-            'requester_id',
+            [
+                'attribute' => 'type_id',
+                'value' => Issue::getTypeText($model['type_id']),
+            ],
+            [
+                'attribute' => 'status_id',
+                'value' => Issue::getStatusText($model['status_id']),
+            ],
+            [
+                'attribute' => 'owner_id',
+                'value' => Html::encode($model->getUsernameText('owner')),
+            ],
+            [
+                'attribute' => 'requester_id',
+                'value' => Html::encode($model->getUsernameText('requester')),
+            ],
             'create_time',
-            'create_user_id',
             'update_time',
-            'update_user_id',
         ],
     ]) ?>
 
