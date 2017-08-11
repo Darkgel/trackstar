@@ -15,7 +15,6 @@ use yii\web\IdentityInterface;
  * @property integer $id
  * @property string $email
  * @property string $username
- * @property string $password
  * @property string $last_login_time
  * @property string $create_time
  * @property integer $create_user_id
@@ -45,7 +44,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['email'], 'required'],
             [['last_login_time', 'create_time', 'update_time'], 'safe'],
             [['create_user_id', 'update_user_id'], 'integer'],
-            [['email', 'username', 'password'], 'string', 'max' => 256],
+            [['email', 'username'], 'string', 'max' => 256],
         ];
     }
 
@@ -58,7 +57,6 @@ class User extends ActiveRecord implements IdentityInterface
             'id' => 'ID',
             'email' => 'Email',
             'username' => 'Username',
-            'password' => 'Password',
             'last_login_time' => 'Last Login Time',
             'create_time' => 'Create Time',
             'create_user_id' => 'Create User ID',
