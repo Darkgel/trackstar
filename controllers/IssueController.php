@@ -6,15 +6,16 @@ use app\models\Project;
 use Yii;
 use app\models\Issue;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
+use app\controllers\base\AppController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\components\filters\ProjectContextFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * IssueController implements the CRUD actions for Issue model.
  */
-class IssueController extends Controller
+class IssueController extends AppController
 {
     //Issue所属的Project
     private $_project = null;
@@ -24,7 +25,7 @@ class IssueController extends Controller
      */
     public function behaviors()
     {
-        return [
+        return ArrayHelper::merge(parent::behaviors(),[
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -37,7 +38,7 @@ class IssueController extends Controller
                     'create','update',
                 ],
             ],
-        ];
+        ]);
     }
 
     public  function loadProject($projectId){
