@@ -17,7 +17,9 @@ use app\components\interfaces\LocalAuthInterface;
  * @property User $user
  */
 class Localauth extends \yii\db\ActiveRecord implements LocalAuthInterface
-{
+{   
+    public $password_repeat;    
+
     /**
      * @inheritdoc
      */
@@ -33,9 +35,12 @@ class Localauth extends \yii\db\ActiveRecord implements LocalAuthInterface
     {
         return [
             [['user_id', 'username', 'password'], 'required'],
+            [['username'], 'unique'],
             [['user_id'], 'integer'],
             [['username', 'password'], 'string', 'max' => 256],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['password_repeat'], 'compare', 'compareAttribute' => 'password'],
+            ['password_repeat', 'safe'],
         ];
     }
 
@@ -49,6 +54,7 @@ class Localauth extends \yii\db\ActiveRecord implements LocalAuthInterface
             'user_id' => 'User ID',
             'username' => 'Username',
             'password' => 'Password',
+            'password_repeat' => "Repeat Password",
         ];
     }
 

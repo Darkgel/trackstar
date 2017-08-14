@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\User;
+use app\models\Localauth;
 use yii\data\ActiveDataProvider;
 use app\controllers\base\AppController;
 use yii\web\NotFoundHttpException;
@@ -65,12 +66,42 @@ class UserController extends AppController
     public function actionCreate()
     {
         $model = new User();
+        $authModel = new Localauth();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $authModel->load(Yii::$app->request->post())) {
+            //使用事务
+            $transaction = Yii::$app->db->beginTransaction();
+            try{
+                if($model->save()){
+                    $authModel->user_id = $model->id;
+                    $authModel->username = $model->email;
+                    if($authModel->validate()){
+                        $authModel->password = Yii::$app->getSecurity()->generatePasswordHash($authModel->password);
+                        if($authModel->save(false)){
+                            $error = array_values($authModel->getFirstErrors())[0];
+                            throw new \Exception($error);//抛出异常
+                        }
+                    }
+                }else{
+                    $error = array_values($model->getFirstErrors())[0];
+                    throw new \Exception($error);//抛出异常
+                }
+            }catch(\Exception $e){
+                // 记录回滚（事务回滚）
+                $transaction->rollBack();
+                Yii::$app->session->setFlash('error',$e->getMessage());
+                return $this->render('create', [
+                    'model' => $model,
+                    'authModel' => $authModel,
+                ]);
+            }
+            $transaction->commit();
             return $this->redirect(['view', 'id' => $model->id]);
+            
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'authModel' => $authModel,
             ]);
         }
     }

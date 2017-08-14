@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\base\AppActiveRecord;
 
 /**
  * This is the model class for table "{{%issue}}".
@@ -24,7 +25,7 @@ use Yii;
  * @property User $owner
  * @property Project $project
  */
-class Issue extends \yii\db\ActiveRecord
+class Issue extends AppActiveRecord
 {
     //issue类型常量($type_id)
     const TYPE_BUG = 0;
@@ -52,8 +53,7 @@ class Issue extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['project_id', 'type_id', 'status_id', 'owner_id', 'requester_id', 'create_user_id', 'update_user_id'], 'integer'],
-            [['create_time', 'update_time'], 'safe'],
+            [['project_id', 'type_id', 'status_id', 'owner_id', 'requester_id'], 'integer'],
             [['name'], 'string', 'max' => 256],
             [['description'], 'string', 'max' => 2000],
             [['requester_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['requester_id' => 'id']],
