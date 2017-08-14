@@ -133,10 +133,5 @@ class ProjectController extends AppController
         }
     }
 
-    public function actionTest(){
-        $hash0 = Yii::$app->getSecurity()->generatePasswordHash('demo');
-        $hash1 = Yii::$app->getSecurity()->generatePasswordHash('darkgel');
-        echo $hash0.'<br/>'.$hash1;
-
-    }
+    
 }

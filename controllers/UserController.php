@@ -77,7 +77,7 @@ class UserController extends AppController
                     $authModel->username = $model->email;
                     if($authModel->validate()){
                         $authModel->password = Yii::$app->getSecurity()->generatePasswordHash($authModel->password);
-                        if($authModel->save(false)){
+                        if(!$authModel->save(false)){
                             $error = array_values($authModel->getFirstErrors())[0];
                             throw new \Exception($error);//抛出异常
                         }
@@ -90,6 +90,8 @@ class UserController extends AppController
                 // 记录回滚（事务回滚）
                 $transaction->rollBack();
                 Yii::$app->session->setFlash('error',$e->getMessage());
+                $authModel->password = '';
+                $authModel->password_repeat = '';
                 return $this->render('create', [
                     'model' => $model,
                     'authModel' => $authModel,
@@ -115,14 +117,51 @@ class UserController extends AppController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $authModel = Localauth::find()->where('user_id=:user_id', ['user_id'=>$id])->one();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if(empty($model) || empty($authModel)){
+            throw new NotFoundHttpException('can not find the user!');
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $authModel->load(Yii::$app->request->post())) {
+            //使用事务
+            $transaction = Yii::$app->db->beginTransaction();
+            try{
+                if($model->save()){
+                    $authModel->user_id = $model->id;
+                    $authModel->username = $model->email;
+                    if($authModel->validate()){
+                        $authModel->password = Yii::$app->getSecurity()->generatePasswordHash($authModel->password);
+                        if(!$authModel->save(false)){
+                            $error = array_values($authModel->getFirstErrors())[0];
+                            throw new \Exception($error);//抛出异常
+                        }
+                    }
+                }else{
+                    $error = array_values($model->getFirstErrors())[0];
+                    throw new \Exception($error);//抛出异常
+                }
+            }catch(\Exception $e){
+                // 记录回滚（事务回滚）
+                $transaction->rollBack();
+                Yii::$app->session->setFlash('error',$e->getMessage());
+                $authModel->password = '';
+                $authModel->password_repeat = '';
+                return $this->render('create', [
+                    'model' => $model,
+                    'authModel' => $authModel,
+                ]);
+            }
+            $transaction->commit();
             return $this->redirect(['view', 'id' => $model->id]);
+            
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'authModel' => $authModel,
             ]);
         }
+
     }
 
     /**

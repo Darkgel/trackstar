@@ -129,4 +129,11 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    public function actionTest(){
+        $hash0 = Yii::$app->getSecurity()->generatePasswordHash('demo');
+        $hash1 = Yii::$app->getSecurity()->generatePasswordHash('darkgel');
+        echo $hash0.'<br/>'.$hash1;
+
+    }
 }
