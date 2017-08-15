@@ -1,9 +1,9 @@
 <?php
 
-namespace app\models;
+namespace app\models\ar;
 
 use Yii;
-use app\models\base\AppActiveRecord;
+use app\models\ar\base\CommonActiveRecord;
 
 /**
  * This is the model class for table "{{%issue}}".
@@ -25,7 +25,7 @@ use app\models\base\AppActiveRecord;
  * @property User $owner
  * @property Project $project
  */
-class Issue extends AppActiveRecord
+class Issue extends CommonActiveRecord
 {
     //issue类型常量($type_id)
     const TYPE_BUG = 0;

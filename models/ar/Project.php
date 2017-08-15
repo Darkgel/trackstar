@@ -1,10 +1,10 @@
 <?php
 
-namespace app\models;
+namespace app\models\ar;
 
 use Yii;
 use yii\helpers\ArrayHelper;
-use app\models\base\AppActiveRecord;
+use app\models\ar\base\CommonActiveRecord;
 
 /**
  * This is the model class for table "{{%project}}".
@@ -17,7 +17,7 @@ use app\models\base\AppActiveRecord;
  * @property string $update_time
  * @property integer $update_user_id
  */
-class Project extends AppActiveRecord
+class Project extends CommonActiveRecord
 {
     /**
      * @inheritdoc

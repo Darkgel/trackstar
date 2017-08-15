@@ -3,12 +3,12 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Project;
+use app\models\ar\Project;
 use yii\data\ActiveDataProvider;
 use app\controllers\base\AppController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\Issue;
+use app\models\ar\Issue;
 use yii\helpers\ArrayHelper;
 
 /**

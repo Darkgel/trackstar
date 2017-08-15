@@ -1,10 +1,13 @@
 <?php
 
-namespace app\models;
+namespace app\models\form;
 
 use Yii;
 use yii\base\Model;
 use yii\db\Exception;
+use yii\db\Expression;
+use app\models\ar\Localauth;
+use app\models\ar\User;
 
 /**
  * LoginForm is the model behind the login form.
@@ -69,7 +72,15 @@ class LoginFormByLocalAuth extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+            $user = $this->getUser();
+            //将登录状态记录到Yii::$app->user中，并且更新User实例的last_login_time
+            if(Yii::$app->user->login($user, $this->rememberMe ? 3600*24*30 : 0) && 
+                $user->updateAttributes(['last_login_time' => new Expression('NOW()')])){
+                    return true;
+            }else{
+                return false;
+            }
+            
         }
         return false;
     }
@@ -88,6 +99,12 @@ class LoginFormByLocalAuth extends Model
         return $this->_userAuth;
     }
 
+    /**
+     * 获取User profile 实例 
+     * 
+     * @return User
+     * @throws Exception
+     */
     public function getUser(){
         if ($this->_user === false) {
             $this->_user = User::findOne($this->_userAuth->user_id);

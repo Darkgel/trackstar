@@ -2,9 +2,9 @@
 
 namespace app\controllers;
 
-use app\models\Project;
+use app\models\ar\Project;
 use Yii;
-use app\models\Issue;
+use app\models\ar\Issue;
 use yii\data\ActiveDataProvider;
 use app\controllers\base\AppController;
 use yii\web\NotFoundHttpException;

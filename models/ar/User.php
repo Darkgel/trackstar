@@ -1,12 +1,12 @@
 <?php
 
-namespace app\models;
+namespace app\models\ar;
 
 use Yii;
 use yii\db\ActiveRecord;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
-use app\models\base\AppActiveRecord;
+use app\models\ar\base\CommonActiveRecord;
 
 
 
@@ -26,7 +26,7 @@ use app\models\base\AppActiveRecord;
  * @property Issue[] $ownIssues
  * @property Project[] $projects
  */
-class User extends AppActiveRecord implements IdentityInterface
+class User extends CommonActiveRecord implements IdentityInterface
 {
     /**
      * @inheritdoc

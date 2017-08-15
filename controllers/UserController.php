@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\User;
-use app\models\Localauth;
+use app\models\ar\User;
+use app\models\ar\Localauth;
 use yii\data\ActiveDataProvider;
 use app\controllers\base\AppController;
 use yii\web\NotFoundHttpException;

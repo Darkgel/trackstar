@@ -1,10 +1,11 @@
 <?php
 
-namespace app\models;
+namespace app\models\ar;
 
 use Yii;
 use yii\db\Exception;
 use app\components\interfaces\LocalAuthInterface;
+use app\models\ar\base\AppActiveRecord;
 
 /**
  * This is the model class for table "{{%localauth}}".
@@ -16,7 +17,7 @@ use app\components\interfaces\LocalAuthInterface;
  *
  * @property User $user
  */
-class Localauth extends \yii\db\ActiveRecord implements LocalAuthInterface
+class Localauth extends AppActiveRecord implements LocalAuthInterface
 {   
     public $password_repeat;    
 

@@ -7,7 +7,7 @@
  */
 use yii\widgets\DetailView;
 use yii\helpers\Html;
-use app\models\Issue;
+use app\models\ar\Issue;
 ?>
 <div class="issue">
     <?= DetailView::widget([

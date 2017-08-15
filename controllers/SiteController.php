@@ -6,8 +6,8 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
-use app\models\LoginFormByLocalAuth;
-use app\models\ContactForm;
+use app\models\form\LoginFormByLocalAuth;
+use app\models\form\ContactForm;
 
 class SiteController extends Controller
 {
@@ -74,6 +74,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
+        //在这里可以有多种登录方法，目前只是实现了通过用户名和密码的方式
         return $this->loginByLocalAuth();
     }
 

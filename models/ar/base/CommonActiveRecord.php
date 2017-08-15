@@ -1,20 +1,18 @@
 <?php
 /**
- * 该AR类作为整个应用的基础AR类
  * @Author: michael.shi 
- * @Date: 2017-08-14 10:55:12 
+ * @Date: 2017-08-14 11:17:01 
  * @Last Modified by: michael.shi
- * @Last Modified time: 2017-08-14 12:32:27
+ * @Last Modified time: 2017-08-14 11:37:35
  */
 
- namespace app\models\base;
+namespace app\models\ar\base;
 
- use \yii\db\ActiveRecord;
- use yii\db\Expression;
- use Yii;
+use yii\db\Expression;
+use Yii;
 
- class AppActiveRecord extends ActiveRecord
- {
+class CommonActiveRecord extends AppActiveRecord
+{
     /**
     * prepare create_time, create_user_id, update_time and update_user_id attributes before performing validation
     * @return array
@@ -30,4 +28,4 @@
 
         return parent::beforeValidate();
     }
- }
+}

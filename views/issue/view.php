@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use app\models\Issue;
+use app\models\ar\Issue;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Issue */
