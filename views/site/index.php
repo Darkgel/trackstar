@@ -8,7 +8,7 @@ $this->title = 'My Yii Application';
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Welcome to <i><?=Html::encode(Yii::$app->name);?></i>!</h1>
+        <h1>Welcome to <i><?=Html::encode(Yii::$app->name);?></i> !</h1>
 
         <?php if(!Yii::$app->user->isGuest):?>
             <p>

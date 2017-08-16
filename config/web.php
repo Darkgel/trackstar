@@ -4,6 +4,7 @@ $params = require(__DIR__ . '/params.php');
 
 $config = [
     'id' => 'basic',
+    'name' => 'Trackstar',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
@@ -17,7 +18,6 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\ar\User',
             'enableAutoLogin' => true,
-            'lastLoginTime' => null,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -37,6 +37,9 @@ $config = [
                     'levels' => ['error', 'warning'],
                 ],
             ],
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
         ],
         'db' => require(__DIR__ . '/db.php'),
         /*
