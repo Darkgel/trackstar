@@ -49,7 +49,12 @@ class ProjectUserForm extends Model
                 $this->addError('username', 'This user has already been added to the project.');
             }else{
                 $this->project->associateUserToProject($user->id);
+                //当采用yii2中rbac方法时，貌似并不需要以下这一步
                 $this->project->associateUserToRole($this->role, $user->id);
+                //但是还是要关联user和role
+                //yii1.1中的代码是   $auth->assign($this->role, $user->id, $bizRule);
+                $auth = Yii::$app->authManager();
+                $auth->assign($this->role, $user->id);
 
             }
 
