@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Projects */
+/* @var $model app\models\ar\Project */
 
 $this->title = 'Create Projects';
 $this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];

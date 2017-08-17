@@ -132,9 +132,12 @@ class SiteController extends Controller
     }
 
     public function actionTest(){
-        $hash0 = Yii::$app->getSecurity()->generatePasswordHash('demo');
-        $hash1 = Yii::$app->getSecurity()->generatePasswordHash('darkgel');
-        echo $hash0.'<br/>'.$hash1;
+//        $hash0 = Yii::$app->getSecurity()->generatePasswordHash('demo');
+//        $hash1 = Yii::$app->getSecurity()->generatePasswordHash('darkgel');
+//        echo $hash0.'<br/>'.$hash1;
+
+        var_dump(Yii::$app->authManager->getRoles());
+
 
     }
 }

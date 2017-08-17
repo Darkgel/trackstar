@@ -125,8 +125,12 @@ class Project extends CommonActiveRecord
     /**
      * 从authManager中获取所有可用的角色 
      */
-    public function getUserRoleOptions(){
-        return Yii::$app->authManager->getRoles();
+    public static function getUserRoleOptions(){
+        $RoleOptions = [];
+        foreach (Yii::$app->authManager->getRoles() as $role){
+            $RoleOptions[$role->name] = $role->description;
+        }
+        return $RoleOptions;
     }
 
 

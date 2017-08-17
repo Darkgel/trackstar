@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\ar\Issue;
 use yii\helpers\ArrayHelper;
+use app\models\form\ProjectUserForm;
+use app\models\ar\User;
 
 /**
  * ProjectController implements the CRUD actions for Projects model.
@@ -133,5 +135,28 @@ class ProjectController extends AppController
         }
     }
 
-    
+    public function actionAddUser($id){
+        $form = new ProjectUserForm();
+        $project = $this->findModel($id);
+
+        if($form->load(Yii::$app->request->post())){
+            $form->project = $project;
+
+            if($form->validate()){
+                Yii::$app->session->setFlash('success', $form->username.' has been added to the project.');
+                $form=  new ProjectUserForm();
+            }
+        }
+
+        $users = User::find()->all();
+        $usernames = [];
+        foreach ($users as $user){
+            $usernames[] = $user->username;
+        }
+        $form->project = $project;
+        return $this->render('adduser', [
+            'model' => $form,
+            'usernames' => $usernames,
+        ]);
+    }
 }
