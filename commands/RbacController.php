@@ -3,7 +3,7 @@
  * @Author: michael.shi 
  * @Date: 2017-08-16 14:25:16 
  * @Last Modified by: michael.shi
- * @Last Modified time: 2017-08-16 17:25:48
+ * @Last Modified time: 2017-08-17 10:15:44
  */
    
 namespace app\commands;
@@ -11,6 +11,7 @@ namespace app\commands;
 use Yii;
 use yii\console\Controller;
 use app\models\ar\User;
+use app\components\rbac\ProjectAssociatedRule;
 
 class RbacController extends Controller
 {
@@ -86,9 +87,15 @@ class RbacController extends Controller
         $auth->addChild($reader, $readIssue);
 
 
+        //create rule ProjectAssociatedRule
+        $projectAssociatedRule = new ProjectAssociatedRule();
+        $auth->add($projectAssociatedRule);
+
+
         //create the member role 
         $member = $auth->createRole('member');
         $member->description = "Member";
+        $member->ruleName = $projectAssociatedRule->name;
         $auth->add($member);
         $auth->addChild($member, $reader);
         $auth->addChild($member, $createIssue);
