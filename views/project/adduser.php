@@ -39,6 +39,9 @@ $this->params['breadcrumbs'][] = 'Add User';
         'clientOptions' => [
             'source' => $usernames,
         ],
+        'options' => [
+            'class' => 'form-control',
+        ],
     ]) ?>
 
     <?= $form->field($model, 'role')->dropDownList(Project::getUserRoleOptions()) ?>

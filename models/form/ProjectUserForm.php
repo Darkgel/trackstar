@@ -19,9 +19,7 @@ use app\models\ar\Project;
 */
 class ProjectUserForm extends Model
 {
-    /**
-     * @var User
-     */
+    
     public $username;
 
     public $role;
@@ -38,7 +36,7 @@ class ProjectUserForm extends Model
     public function rules()
     {
         return [
-            [['username, role'], 'required'],
+            [['username', 'role'], 'required'],
             [['username'], 'exist', 'targetClass' => 'app\models\ar\User'],
             [['username'], 'verify'],
         ];
