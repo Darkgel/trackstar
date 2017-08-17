@@ -148,11 +148,9 @@ class ProjectController extends AppController
             }
         }
 
-        $users = User::find()->all();
-        $usernames = [];
-        foreach ($users as $user){
-            $usernames[] = $user->username;
-        }
+        $users = User::find()->select('username')->asArray()->all();
+        $usernames = ArrayHelper::getColumn($users, 'username');
+
         $form->project = $project;
         return $this->render('adduser', [
             'model' => $form,
