@@ -14,6 +14,7 @@ use yii\helpers\ArrayHelper;
 use app\models\form\ProjectUserRoleForm;
 use app\models\ar\User;
 use yii\db\Query;
+use yii\web\ForbiddenHttpException;
 
 /**
  * ProjectController implements the CRUD actions for Projects model.
@@ -56,11 +57,17 @@ class ProjectController extends AppController
     /**
      * Displays a single Projects model.
      * @param integer $id
+     * @throws ForbiddenHttpException
      * @return mixed
      */
     public function actionView($id)
     {
         $project = $this->findModel($id);
+
+        if(!Yii::$app->user->can('readProject', ['project'=>$project])){
+            throw new ForbiddenHttpException('您不具有相应的权限！');
+        }
+
         $issueDataProvider = new ActiveDataProvider([
             'query' => Issue::find()->where('project_id=:project_id', [':project_id' => $id, ])->asArray(),
             'pagination' => [
@@ -107,11 +114,16 @@ class ProjectController extends AppController
      * Updates an existing Projects model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
+     * @throws ForbiddenHttpException
      * @return mixed
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
+        if(!Yii::$app->user->can('updateProject', ['project'=>$model])){
+            throw new ForbiddenHttpException('您不具有相应的权限！');
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -126,11 +138,17 @@ class ProjectController extends AppController
      * Deletes an existing Projects model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
+     * @throws ForbiddenHttpException
      * @return mixed
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        if(!Yii::$app->user->can('deleteProject', ['project'=>$model])){
+            throw new ForbiddenHttpException('您不具有相应的权限！');
+        }
+
+        $model->delete();
 
         return $this->redirect(['index']);
     }
@@ -152,9 +170,12 @@ class ProjectController extends AppController
     }
 
     public function actionAddMember($id){
-        $form = new ProjectUserRoleForm();
         $project = $this->findModel($id);
+        if(!Yii::$app->user->can('addUser', ['project'=>$project])){
+            throw new ForbiddenHttpException('您不具有相应的权限！');
+        }
 
+        $form = new ProjectUserRoleForm();
         if($form->load(Yii::$app->request->post())){
             $form->project = $project;
 
@@ -175,6 +196,11 @@ class ProjectController extends AppController
     }
 
     public function actionDeleteMember($id, $uid, $role){
+        $project = $this->findModel($id);
+        if(!Yii::$app->user->can('deleteUser', ['project'=>$project])){
+            throw new ForbiddenHttpException('您不具有相应的权限！');
+        }
+
         $sql = "delete from ".$this->projectUserRoleTable." where project_id=:project_id and user_id=:user_id and role=:role";
         $params = [
             ':project_id' => $id,
@@ -192,4 +218,20 @@ class ProjectController extends AppController
 
         return $this->redirect(['view', 'id'=>$id]);
     }
+
+    private function getPermOnView($projectId){
+        $auth = Yii::$app->authManager;
+        $uid = Yii::$app->user->id;
+        $project = $this->findModel($projectId);
+        $canReadProject = $auth->checkAccess($uid, 'readProject', ['project'=>$project]);
+        $canUpdateProject = $auth->checkAccess($uid, 'updateProject', ['project'=>$project]);
+        $canDeleteProject = $auth->checkAccess($uid, 'deleteProject', ['project'=>$project]);
+
+        return [
+            'canReadProject' => $canReadProject,
+            'canUpdateProject' => $canUpdateProject,
+            'canDeleteProject' => $canDeleteProject,
+        ];
+    }
+
 }

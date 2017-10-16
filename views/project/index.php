@@ -29,7 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'update_time',
             // 'update_user_id',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+            ],
         ],
     ]); ?>
 </div>
