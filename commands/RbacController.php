@@ -11,7 +11,8 @@ namespace app\commands;
 use Yii;
 use yii\console\Controller;
 use app\models\ar\User;
-use app\components\rbac\ProjectAssociatedRule;
+use app\components\rbac\rules\ProjectAssociatedRule;
+use app\components\rbac\models\Assignment;
 
 class RbacController extends Controller
 {
@@ -88,7 +89,6 @@ class RbacController extends Controller
         //create the reader role 
         $reader = $auth->createRole('reader');
         $reader->description = "Reader";
-        $reader->ruleName = $projectAssociatedRule->name;
         $auth->add($reader);
         $auth->addChild($reader, $readUser);
         $auth->addChild($reader, $readProject);
@@ -97,7 +97,6 @@ class RbacController extends Controller
         //create the member role 
         $member = $auth->createRole('member');
         $member->description = "Member";
-        $member->ruleName = $projectAssociatedRule->name;
         $auth->add($member);
         $auth->addChild($member, $reader);
         $auth->addChild($member, $createIssue);
@@ -108,7 +107,6 @@ class RbacController extends Controller
         //create the owner role 
         $owner = $auth->createRole('owner');
         $owner->description = "Owner";
-        $owner->ruleName = $projectAssociatedRule->name;
         $auth->add($owner);
         $auth->addChild($owner, $member);
         $auth->addChild($owner, $createUser);
@@ -121,20 +119,31 @@ class RbacController extends Controller
 
 
     public function actionAssign(){
+        $projectAssociatedRule = new ProjectAssociatedRule();
+        $ruleName = $projectAssociatedRule->name;
+
         $auth = Yii::$app->authManager;
         $auth->removeAllAssignments();
 
-        $authRole = $auth->getRole('member');
+        $assignmentTmp = new Assignment();
+
         $user = User::find()->where('username=:username', [':username' => 'darkgel'])->one();
-        $auth->assign($authRole, $user->id);
+        $assignmentTmp->userId = $user->id;
+        $assignmentTmp->roleName = 'member';
+        $assignmentTmp->ruleName = $ruleName;
+        $auth->assign($assignmentTmp);
 
-        $authRole = $auth->getRole('owner');
         $user = User::find()->where('username=:username', [':username' => 'demo'])->one();
-        $auth->assign($authRole, $user->id);
+        $assignmentTmp->userId = $user->id;
+        $assignmentTmp->roleName = 'owner';
+        $assignmentTmp->ruleName = $ruleName;
+        $auth->assign($assignmentTmp);
 
-        $authRole = $auth->getRole('reader');
         $user = User::find()->where('username=:username', [':username' => 'test'])->one();
-        $auth->assign($authRole, $user->id);
+        $assignmentTmp->userId = $user->id;
+        $assignmentTmp->roleName = 'reader';
+        $assignmentTmp->ruleName = $ruleName;
+        $auth->assign($assignmentTmp);
     }
 
 }

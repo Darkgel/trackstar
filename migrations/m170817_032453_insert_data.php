@@ -58,7 +58,7 @@ class m170817_032453_insert_data extends Migration
 
     public function safeDown()
     {
-        $this->truncateTable('{{%project_user_role}');
+        $this->truncateTable('{{%project_user_role}}');
     }
 
     /*

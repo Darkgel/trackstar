@@ -6,9 +6,9 @@
  * @Last Modified time: 2017-08-17 10:12:16
  */
 
-namespace app\components\rbac;
+namespace app\components\rbac\rules;
 
-use yii\rbac\Rule;
+use app\components\rbac\models\Rule;
 use app\models\ar\Project;
 
 
