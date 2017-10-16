@@ -22,35 +22,37 @@ class RbacController extends Controller
         $auth->removeAll();
 
         // create the lowest level operations for users
-        $createUser = $auth->createPermission('createUser');
-        $createUser->description = 'Create a new user';
+        $createUser = $auth->createPermission('addUser');
+        $createUser->description = 'Add a new user to Project';
         $auth->add($createUser);
 
-        $readUser = $auth->createPermission('readUser');
-        $readUser->description = 'read user profile infomation';
+        $readUser = $auth->createPermission('readMember');
+        $readUser->description = 'read user profile information in project';
         $auth->add($readUser);
 
         $updateUser = $auth->createPermission('updateUser');
-        $updateUser->description = 'update a user\'s infomation';
+        $updateUser->description = 'update a user\'s information in project';
         $auth->add($updateUser);
 
         $deleteUser = $auth->createPermission('deleteUser');
-        $deleteUser->description = 'remove a user from a project';
+        $deleteUser->description = 'remove a user from a project in project';
         $auth->add($deleteUser);
 
 
 
-        // create the lowest level operations for projects
-        $createProject = $auth->createPermission('createProject');
-        $createProject->description = 'Create a new project';
-        $auth->add($createProject);
 
+        //只要是应用的用户就可以createProject
+//        $createProject = $auth->createPermission('createProject');
+//        $createProject->description = 'Create a new project';
+//        $auth->add($createProject);
+
+        // create the lowest level operations for projects
         $readProject = $auth->createPermission('readProject');
-        $readProject->description = 'read project infomation';
+        $readProject->description = 'read project information';
         $auth->add($readProject);
 
         $updateProject = $auth->createPermission('updateProject');
-        $updateProject->description = 'update project infomation';
+        $updateProject->description = 'update project information';
         $auth->add($updateProject);
 
         $deleteProject = $auth->createPermission('deleteProject');
@@ -65,11 +67,11 @@ class RbacController extends Controller
         $auth->add($createIssue);
 
         $readIssue = $auth->createPermission('readIssue');
-        $readIssue->description = 'read issue infomation';
+        $readIssue->description = 'read issue information';
         $auth->add($readIssue);
 
         $updateIssue = $auth->createPermission('updateIssue');
-        $updateIssue->description = 'update issue infomation';
+        $updateIssue->description = 'update issue information';
         $auth->add($updateIssue);
 
         $deleteIssue = $auth->createPermission('deleteIssue');
@@ -77,20 +79,20 @@ class RbacController extends Controller
         $auth->add($deleteIssue);
 
 
-        
-        //create the reader role 
-        $reader = $auth->createRole('reader');
-        $reader->description = "Reader";
-        $auth->add($reader);
-        $auth->addChild($reader, $readUser);
-        $auth->addChild($reader, $readProject);
-        $auth->addChild($reader, $readIssue);
 
 
         //create rule ProjectAssociatedRule
         $projectAssociatedRule = new ProjectAssociatedRule();
         $auth->add($projectAssociatedRule);
 
+        //create the reader role 
+        $reader = $auth->createRole('reader');
+        $reader->description = "Reader";
+        $reader->ruleName = $projectAssociatedRule->name;
+        $auth->add($reader);
+        $auth->addChild($reader, $readUser);
+        $auth->addChild($reader, $readProject);
+        $auth->addChild($reader, $readIssue);
 
         //create the member role 
         $member = $auth->createRole('member');
@@ -106,13 +108,12 @@ class RbacController extends Controller
         //create the owner role 
         $owner = $auth->createRole('owner');
         $owner->description = "Owner";
+        $owner->ruleName = $projectAssociatedRule->name;
         $auth->add($owner);
-        $auth->addChild($owner, $reader);
         $auth->addChild($owner, $member);
         $auth->addChild($owner, $createUser);
         $auth->addChild($owner, $updateUser);
         $auth->addChild($owner, $deleteUser);
-        $auth->addChild($owner, $createProject);
         $auth->addChild($owner, $updateProject);
         $auth->addChild($owner, $deleteProject);
 

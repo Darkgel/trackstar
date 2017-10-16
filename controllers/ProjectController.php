@@ -6,18 +6,22 @@ use Yii;
 use app\models\ar\Project;
 use yii\data\ActiveDataProvider;
 use app\controllers\base\AppController;
+use yii\data\ArrayDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\ar\Issue;
 use yii\helpers\ArrayHelper;
-use app\models\form\ProjectUserForm;
+use app\models\form\ProjectUserRoleForm;
 use app\models\ar\User;
+use yii\db\Query;
 
 /**
  * ProjectController implements the CRUD actions for Projects model.
  */
 class ProjectController extends AppController
 {
+    private $projectUserRoleTable = '{{%project_user_role}}';
+
     /**
      * @inheritdoc
      */
@@ -63,9 +67,21 @@ class ProjectController extends AppController
                 'pageSize' => 2,
             ],
         ]);
+
+        $query = new Query();
+        $query->select('id as uid,username,role,project_id')
+            ->from('{{%user}}')
+            ->innerJoin('{{%project_user_role}}', '{{%user}}.id={{%project_user_role}}.user_id')
+            ->where('project_id=:project_id', [':project_id'=>$id]);
+
+        $members = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
         return $this->render('view', [
             'model' => $project,
             'issueDataProvider' => $issueDataProvider,
+            'members' => $members,
         ]);
     }
 
@@ -135,16 +151,16 @@ class ProjectController extends AppController
         }
     }
 
-    public function actionAddUser($id){
-        $form = new ProjectUserForm();
+    public function actionAddMember($id){
+        $form = new ProjectUserRoleForm();
         $project = $this->findModel($id);
 
         if($form->load(Yii::$app->request->post())){
             $form->project = $project;
 
-            if($form->validate()){
+            if($form->validate() && $form->save()){
                 Yii::$app->session->setFlash('success', $form->username.' has been added to the project.');
-                $form=  new ProjectUserForm();
+                return $this->redirect(['view', 'id'=>$id]);
             }
         }
 
@@ -156,5 +172,24 @@ class ProjectController extends AppController
             'model' => $form,
             'usernames' => $usernames,
         ]);
+    }
+
+    public function actionDeleteMember($id, $uid, $role){
+        $sql = "delete from ".$this->projectUserRoleTable." where project_id=:project_id and user_id=:user_id and role=:role";
+        $params = [
+            ':project_id' => $id,
+            ':user_id' => $uid,
+            ':role' => $role,
+        ];
+
+        $result = Yii::$app->db->createCommand($sql, $params)->execute();
+
+        if($result){
+            Yii::$app->session->setFlash('success', 'the selected user has been removed from project.');
+        }else{
+            Yii::$app->session->setFlash('fail', 'the selected user has been removed from project.');
+        }
+
+        return $this->redirect(['view', 'id'=>$id]);
     }
 }

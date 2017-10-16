@@ -9,24 +9,17 @@
 namespace app\components\rbac;
 
 use yii\rbac\Rule;
+use app\models\ar\Project;
 
 
 class ProjectAssociatedRule extends Rule
 {
     public $name = 'projectAssociated';
-    public $associatedTable = '{{%project_user_assignment}}';
-    public $db = 'db';
-
 
     public function execute($user, $item, $params){
-        if(isset($params['project'])){
-            $sql = 'select project_id from '.$this->associatedTable.' where project_id=:project_id and user_id=:user_id';
-            $sqlParams = [
-                ':project_id' => $params['project']->id,
-                ':user_id' => $user,
-            ];
-            $result = \Yii::$app->get($this->db)->createCommand($sql, $sqlParams)->queryOne();
-            return $result ? true : false;
+        $project = isset($params['project']) ? $params['project'] : NULL;
+        if($project instanceof Project){
+            return $project->isUserInRole($item->name);
         }
 
         return false;

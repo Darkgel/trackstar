@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\widgets\ListView;
+use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\ar\Project */
@@ -24,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <?= Html::a('Add Member', ['add-member', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
         <?= Html::a('Create Issue', ['issue/create', 'pid' => $model->id], ['class' => 'btn btn-info pull-right']) ?>
     </p>
 
@@ -39,6 +41,28 @@ $this->params['breadcrumbs'][] = $this->title;
             'update_user_id',
         ],
     ]) ?>
+
+    <hr/>
+    <h3>Members</h3>
+    <?=GridView::widget([
+        'dataProvider' => $members,
+        'columns' => [
+            'uid',
+            'username',
+            'role',
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{delete}',
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    switch($action){
+                        case 'delete':
+                            return Yii::$app->urlManager->createUrl(['project/delete-member','id'=>$model['project_id'],'uid'=>$model['uid'],'role'=>$model['role']]);
+                            break;
+                    }
+                },
+            ],
+        ],
+    ]);?>
 
     <hr/>
     <h3>All Issues</h3>
