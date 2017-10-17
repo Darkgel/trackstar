@@ -20,60 +20,23 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'name',
             'description:ntext',
             'create_time',
             'create_user_id',
-            // 'update_time',
-            // 'update_user_id',
-
             [
                 'class' => 'yii\grid\ActionColumn',
-                'buttons' => [
-                    'views' => function ($url, $model, $key) {
-                        if($model->perms['readProject']){
-                            $title = Yii::t('yii', 'View');
-                            $options = [
-                                'title' => $title,
-                                'aria-label' => $title,
-                                'data-pjax' => '0',
-                            ];
-                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-eye-open"]);
-                            return Html::a($icon, $url, $options);
-                        }else{
-                            return '';
-                        }
+                'visibleButtons' => [
+                    'view' => function($model, $key, $index){
+                        return \Yii::$app->user->can('readProject',['project'=>$model]);
                     },
-                    'update' => function ($url, $model, $key) {
-                        if($model->perms['updateProject']){
-                            $title = Yii::t('yii', 'Update');
-                            $options = [
-                                'title' => $title,
-                                'aria-label' => $title,
-                                'data-pjax' => '0',
-                            ];
-                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-eye-pencil"]);
-                            return Html::a($icon, $url, $options);
-                        }else{
-                            return '';
-                        }
+                    'update' => function($model, $key, $index){
+                        return \Yii::$app->user->can('updateProject',['project'=>$model]);
                     },
-                    'delete' => function ($url, $model, $key) {
-                        if($model->perms['deleteProject']){
-                            $title = Yii::t('yii', 'Delete');
-                            $options = [
-                                'title' => $title,
-                                'aria-label' => $title,
-                                'data-pjax' => '0',
-                            ];
-                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-eye-trash"]);
-                            return Html::a($icon, $url, $options);
-                        }else{
-                            return '';
-                        }
-                    },
+                    'delete' => function($model, $key, $index){
+                        return \Yii::$app->user->can('deleteProject',['project'=>$model]);
+                    }
                 ],
             ],
         ],

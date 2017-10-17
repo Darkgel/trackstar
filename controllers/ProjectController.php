@@ -45,40 +45,13 @@ class ProjectController extends AppController
      */
     public function actionIndex()
     {
-        $projects = Project::find()->all();
-
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $this->associatePermissionsOnIndex($projects),
+        $dataProvider = new ActiveDataProvider([
+            'query' => $projects = Project::find(),
         ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
-    }
-
-    private function associatePermissionsOnIndex($projects){
-        $result = [];
-        foreach ($projects as $item){
-            $perms = $this->getPermOfProject($item);
-            $item->perms = $perms;
-            $result[] = $item;
-        }
-
-        return $result;
-    }
-
-    private function getPermOfProject($project){
-        $auth = Yii::$app->authManager;
-        $uid = Yii::$app->user->id;
-        $canReadProject = $auth->checkAccess($uid, 'readProject', ['project'=>$project]);
-        $canUpdateProject = $auth->checkAccess($uid, 'updateProject', ['project'=>$project]);
-        $canDeleteProject = $auth->checkAccess($uid, 'deleteProject', ['project'=>$project]);
-
-        return [
-            'readProject' => $canReadProject,
-            'updateProject' => $canUpdateProject,
-            'deleteProject' => $canDeleteProject,
-        ];
     }
 
     /**
