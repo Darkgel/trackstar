@@ -99,16 +99,6 @@ class IssueController extends AppController
     }
 
     /**
-     * @param Issue $issue
-     * @return Comment|Response
-     */
-    protected function createComment($issue){
-
-
-        //return $comment;
-    }
-
-    /**
      * Creates a new Issue model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
