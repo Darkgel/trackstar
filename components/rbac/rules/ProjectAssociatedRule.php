@@ -9,6 +9,7 @@
 namespace app\components\rbac\rules;
 
 use app\components\rbac\models\Rule;
+use app\components\rbac\models\Assignment;
 use app\models\ar\Project;
 
 
@@ -16,10 +17,16 @@ class ProjectAssociatedRule extends Rule
 {
     public $name = 'projectAssociated';
 
+    /**
+     * @param int $user User ID
+     * @param Assignment  $item
+     * @param array $params
+     * @return bool
+     */
     public function execute($user, $item, $params){
         $project = isset($params['project']) ? $params['project'] : NULL;
         if($project instanceof Project){
-            return $project->isUserInRole($item->name);
+            return $project->isUserInRole($item->roleName);
         }
 
         return false;

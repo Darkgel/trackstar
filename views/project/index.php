@@ -31,6 +31,50 @@ $this->params['breadcrumbs'][] = $this->title;
 
             [
                 'class' => 'yii\grid\ActionColumn',
+                'buttons' => [
+                    'views' => function ($url, $model, $key) {
+                        if($model->perms['readProject']){
+                            $title = Yii::t('yii', 'View');
+                            $options = [
+                                'title' => $title,
+                                'aria-label' => $title,
+                                'data-pjax' => '0',
+                            ];
+                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-eye-open"]);
+                            return Html::a($icon, $url, $options);
+                        }else{
+                            return '';
+                        }
+                    },
+                    'update' => function ($url, $model, $key) {
+                        if($model->perms['updateProject']){
+                            $title = Yii::t('yii', 'Update');
+                            $options = [
+                                'title' => $title,
+                                'aria-label' => $title,
+                                'data-pjax' => '0',
+                            ];
+                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-eye-pencil"]);
+                            return Html::a($icon, $url, $options);
+                        }else{
+                            return '';
+                        }
+                    },
+                    'delete' => function ($url, $model, $key) {
+                        if($model->perms['deleteProject']){
+                            $title = Yii::t('yii', 'Delete');
+                            $options = [
+                                'title' => $title,
+                                'aria-label' => $title,
+                                'data-pjax' => '0',
+                            ];
+                            $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-eye-trash"]);
+                            return Html::a($icon, $url, $options);
+                        }else{
+                            return '';
+                        }
+                    },
+                ],
             ],
         ],
     ]); ?>

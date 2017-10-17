@@ -21,7 +21,8 @@ use yii\db\Expression;
 class Project extends CommonActiveRecord
 {
     private $projectUserRoleTable = '{{%project_user_role}}';
-    private $projectUserAssignmentTable = '{{%project_user_assignment}}';
+
+    public $perms = null;
 
     /**
      * @inheritdoc

@@ -739,6 +739,7 @@ class DbManager extends BaseManager
         return new Assignment([
             'userId' => $row['user_id'],
             'roleName' => $row['item_name'],
+            'ruleName' => $row['rule_name'],
             'createdAt' => $row['created_at'],
         ]);
     }
@@ -761,6 +762,7 @@ class DbManager extends BaseManager
             $assignments[$row['item_name']] = new Assignment([
                 'userId' => $row['user_id'],
                 'roleName' => $row['item_name'],
+                'ruleName' => $row['rule_name'],
                 'createdAt' => $row['created_at'],
             ]);
         }
