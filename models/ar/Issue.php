@@ -107,6 +107,16 @@ class Issue extends CommonActiveRecord
         return $this->hasOne(Project::className(), ['id' => 'project_id']);
     }
 
+    public function getComments(){
+        return $this->hasMany(Comment::className(), ['issue_id'=>'id']);
+    }
+
+    public function getCommentCount(){
+        $sql = 'select count(*) from '.Comment::tableName().' where issue_id='.$this->id;
+        $result = self::getDb()->createCommand($sql)->execute();
+        return $result;
+    }
+
     public static function getTypeArr(){
         $array = [
             self::TYPE_BUG => 'Bugs',
@@ -155,5 +165,12 @@ class Issue extends CommonActiveRecord
         return $username;
     }
 
-
+    /**
+     * @param Comment $comment
+     * @return bool
+     */
+    public function addComment($comment){
+        $comment->issue_id = $this->id;
+        return $comment->save();
+    }
 }

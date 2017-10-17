@@ -2,72 +2,41 @@
 
 namespace app\controllers;
 
-use app\models\ar\Comment;
-use app\models\ar\Project;
 use Yii;
-use app\models\ar\Issue;
-use yii\base\Response;
+use app\models\ar\Comment;
 use yii\data\ActiveDataProvider;
-use app\controllers\base\AppController;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\components\filters\ProjectContextFilter;
-use yii\helpers\ArrayHelper;
 
 /**
- * IssueController implements the CRUD actions for Issue model.
+ * CommentController implements the CRUD actions for Comment model.
  */
-class IssueController extends AppController
+class CommentController extends Controller
 {
-    //Issue所属的Project
-    private $_project = null;
-
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
-        return ArrayHelper::merge(parent::behaviors(),[
+        return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
                 ],
             ],
-            'filterProjectContext' => [
-                'class' => ProjectContextFilter::className(),
-                'only'=>[
-                    'create','update',
-                ],
-            ],
-        ]);
-    }
-
-    public  function loadProject($projectId){
-        if($this->_project === null){
-            $this->_project = Project::findOne($projectId);
-            if($this->_project === null){
-                throw new NotFoundHttpException('The requested project does not exit!', 404);
-            }
-        }
-        return $this->_project;
+        ];
     }
 
     /**
-     * @return Project the project model instance to which this issue belongs
-      */
-    public function getProject(){
-        return $this->_project;
-    }
-
-    /**
-     * Lists all Issue models.
+     * Lists all Comment models.
      * @return mixed
      */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Issue::find(),
+            'query' => Comment::find(),
         ]);
 
         return $this->render('index', [
@@ -76,60 +45,37 @@ class IssueController extends AppController
     }
 
     /**
-     * Displays a single Issue model.
+     * Displays a single Comment model.
      * @param integer $id
      * @return mixed
      */
     public function actionView($id)
     {
-        $issue = $this->findModel($id);
-
-        $comment = new Comment();
-        if(isset($_POST['Comment'])){
-            if($comment->load(Yii::$app->request->post()) && $issue->addComment($comment)){
-                Yii::$app->session->setFlash('success','Your comment has been added!');
-                return $this->refresh();
-            }
-        }
-
         return $this->render('view', [
-            'model' => $issue,
-            'comment' => $comment,
+            'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * @param Issue $issue
-     * @return Comment|Response
-     */
-    protected function createComment($issue){
-
-
-        //return $comment;
-    }
-
-    /**
-     * Creates a new Issue model.
+     * Creates a new Comment model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Issue();
-        $model->project_id = $this->_project->id;
+        $model = new Comment();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'userOptions' => $this->getProject()->getUserArr(),
             ]);
         }
     }
 
     /**
-     * Updates an existing Issue model.
+     * Updates an existing Comment model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -143,13 +89,12 @@ class IssueController extends AppController
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'userOptions' => $this->getProject()->getUserArr(),
             ]);
         }
     }
 
     /**
-     * Deletes an existing Issue model.
+     * Deletes an existing Comment model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -162,15 +107,15 @@ class IssueController extends AppController
     }
 
     /**
-     * Finds the Issue model based on its primary key value.
+     * Finds the Comment model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Issue the loaded model
+     * @return Comment the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Issue::findOne($id)) !== null) {
+        if (($model = Comment::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

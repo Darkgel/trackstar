@@ -5,7 +5,7 @@ use yii\widgets\DetailView;
 use app\models\ar\Issue;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Issue */
+/* @var $model app\models\ar\Issue */
 
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Project', 'url' => ['project/view', 'id' => $model->project_id]];
@@ -53,5 +53,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'update_time',
         ],
     ]) ?>
+
+</div>
+
+<div id="comments">
+    <?php if($model->commentCount>=1):?>
+    <h3>
+        <?=$model->commentCount>1 ? $model->commentCount.'comments' : 'One comment';?>
+    </h3>
+
+    <?=$this->render('_comments', [
+        'comments' => $model->comments,
+    ])?>
+    <?php endif;?>
+
+    <h3>Leave a Comment</h3>
+    <?=$this->render('/comment/_form', [
+        'model' => $comment
+    ]);?>
 
 </div>
