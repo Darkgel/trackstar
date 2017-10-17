@@ -17,7 +17,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
+        <?php if(Yii::$app->user->can('updateProject', ['project'=>$model])):?>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?php endif;?>
+
+        <?php if(Yii::$app->user->can('deleteProject', ['project'=>$model])):?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -25,8 +29,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <?php endif;?>
+
+        <?php if(Yii::$app->user->can('addUser', ['project'=>$model])):?>
         <?= Html::a('Add Member', ['add-member', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
+        <?php endif;?>
+
+        <?php if(Yii::$app->user->can('createIssue', ['project'=>$model])):?>
         <?= Html::a('Create Issue', ['issue/create', 'pid' => $model->id], ['class' => 'btn btn-info pull-right']) ?>
+        <?php endif;?>
     </p>
 
     <?= DetailView::widget([
@@ -60,10 +71,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             break;
                     }
                 },
-            ],
+                'visibleButtons' => [
+                    'delete'=> \Yii::$app->user->can('deleteUser',['project'=>$model]),
+                ],
+             ],
         ],
     ]);?>
 
+    <?php if(Yii::$app->user->can('readIssue', ['project'=>$model])):?>
     <hr/>
     <h3>All Issues</h3>
     <?= ListView::widget([
@@ -74,5 +89,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'lastPageLabel' => 'Last',
         ],
     ]);?>
+    <?php endif;?>
 
 </div>

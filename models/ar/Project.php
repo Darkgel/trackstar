@@ -2,6 +2,7 @@
 
 namespace app\models\ar;
 
+use app\components\rbac\rules\ProjectAssociatedRule;
 use Yii;
 use yii\helpers\ArrayHelper;
 use app\models\ar\base\CommonActiveRecord;
@@ -110,9 +111,10 @@ class Project extends CommonActiveRecord
         //如果尚不存在该assignment则创建之
         if(empty($assignment)){
             $assignmentTmp = new Assignment();
+            $rule = new ProjectAssociatedRule();
             $assignmentTmp->userId = $userId;
-            $assignmentTmp->roleName = 'owner';
-            $assignmentTmp->ruleName = 'projectAssociated';
+            $assignmentTmp->roleName = $roleName;
+            $assignmentTmp->ruleName = $rule->name;
             $auth->assign($assignmentTmp);
         }
 
