@@ -6,6 +6,7 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use app\models\ar\base\CommonActiveRecord;
 use yii\db\Expression;
+use app\components\rbac\models\Assignment;
 
 /**
  * This is the model class for table "{{%project}}".
@@ -107,8 +108,12 @@ class Project extends CommonActiveRecord
         }
 
         //如果尚不存在该assignment则创建之
-        if($assignment === null ){
-            $auth->assign($role, $userId);
+        if(empty($assignment)){
+            $assignmentTmp = new Assignment();
+            $assignmentTmp->userId = $userId;
+            $assignmentTmp->roleName = 'owner';
+            $assignmentTmp->ruleName = 'projectAssociated';
+            $auth->assign($assignmentTmp);
         }
 
         $sql = 'insert into '.$this->projectUserRoleTable.' (project_id, user_id, role) values (:project_id, :user_id, :role)';

@@ -15,6 +15,7 @@ use app\models\form\ProjectUserRoleForm;
 use app\models\ar\User;
 use yii\db\Query;
 use yii\web\ForbiddenHttpException;
+use app\components\rbac\models\Assignment;
 
 /**
  * ProjectController implements the CRUD actions for Projects model.
@@ -101,7 +102,20 @@ class ProjectController extends AppController
     {
         $model = new Project();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try{
+                if($model->save() && $model->associateUserToRole('owner', Yii::$app->user->id)){
+                    $transaction->commit();
+                    Yii::$app->session->setFlash('success', 'create project successfully!');
+                }else{
+                    throw new \Exception('fail to create a new project');
+                }
+
+            }catch (\Exception $e){
+                $transaction->rollBack();
+                Yii::$app->session->setFlash('fail', 'fail to create a new project!');
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [

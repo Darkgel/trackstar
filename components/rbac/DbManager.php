@@ -891,7 +891,7 @@ class DbManager extends BaseManager
             $assignment->createdAt = $time;
         }
 
-        $this->db->createCommand()
+        $result = $this->db->createCommand()
             ->insert($this->assignmentTable, [
                 'user_id' => $assignment->userId,
                 'item_name' => $assignment->roleName,
@@ -900,7 +900,7 @@ class DbManager extends BaseManager
                 'created_at' => $assignment->createdAt,
             ])->execute();
 
-        return $assignment;
+        return empty($result) ? false : $assignment;
     }
 
     /**

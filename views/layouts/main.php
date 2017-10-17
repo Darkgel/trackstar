@@ -67,6 +67,18 @@ AppAsset::register($this);
                 'body' => Yii::$app->session->getFlash('error'),
             ]);?>
         <?php endif;?>
+        <?php if(Yii::$app->session->hasFlash('fail')):?>
+            <?=Alert::widget([
+                'options' => ['class' => 'alert-warning'],
+                'body' => Yii::$app->session->getFlash('fail'),
+            ]);?>
+        <?php endif;?>
+        <?php if(Yii::$app->session->hasFlash('success')):?>
+            <?=Alert::widget([
+                'options' => ['class' => 'alert-success'],
+                'body' => Yii::$app->session->getFlash('success'),
+            ]);?>
+        <?php endif;?>
         <?= $content ?>
     </div>
 </div>
