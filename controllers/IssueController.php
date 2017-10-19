@@ -166,4 +166,6 @@ class IssueController extends AppController
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+
 }

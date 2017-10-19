@@ -5,6 +5,7 @@ namespace app\models\ar;
 use Yii;
 
 use app\models\ar\base\CommonActiveRecord;
+use yii\db\Query;
 
 /**
  * This is the model class for table "{{%comment}}".
@@ -85,5 +86,26 @@ class Comment extends CommonActiveRecord
     public function getUpdateUser()
     {
         return $this->hasOne(User::className(), ['id' => 'update_user_id']);
+    }
+
+    public static function findRecentComments($limit = 10, $projectId = null){
+        $query = (new Query())
+            ->select(
+                User::tableName().'.username as author,'
+                .Issue::tableName().'.name as issueName,'
+                .Issue::tableName().'.id as issueId'
+            )->from(Comment::tableName())
+            ->innerJoin(Issue::tableName(), Comment::tableName().'.issue_id='.Issue::tableName().'.id')
+            ->innerJoin(User::tableName(), Comment::tableName().'.create_user_id='.Issue::tableName().'.id')
+            ->orderBy(Comment::tableName().'.create_time DESC')
+            ->limit($limit);
+
+        if($projectId !== null){
+            $query = $query->andWhere('project_id=:projectId', [':projectId'=>$projectId]);
+        }
+
+        $result = $query->all();
+
+        return $result;
     }
 }

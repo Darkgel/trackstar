@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\widgets\ListView;
 use yii\grid\GridView;
+use app\widgets\RecentComments;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\ar\Project */
@@ -92,3 +93,5 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php endif;?>
 
 </div>
+
+<?php echo RecentComments::widget(['projectId'=>$model->id]);?>

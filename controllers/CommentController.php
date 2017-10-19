@@ -8,11 +8,12 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\controllers\base\AppController;
 
 /**
  * CommentController implements the CRUD actions for Comment model.
  */
-class CommentController extends Controller
+class CommentController extends AppController
 {
     /**
      * @inheritdoc
@@ -120,5 +121,10 @@ class CommentController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionTest(){
+        $comments = Comment::findRecentComments(2,1);
+        var_dump($comments);exit;
     }
 }
