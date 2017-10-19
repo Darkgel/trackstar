@@ -5,10 +5,12 @@ namespace app\controllers;
 use Yii;
 use app\models\ar\Comment;
 use yii\data\ActiveDataProvider;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\controllers\base\AppController;
+use Zend\Feed\Writer\Feed;
+use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
 
 /**
  * CommentController implements the CRUD actions for Comment model.
@@ -20,14 +22,30 @@ class CommentController extends AppController
      */
     public function behaviors()
     {
-        return [
+        return ArrayHelper::merge(parent::behaviors(),[
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
                 ],
             ],
-        ];
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    // allow authenticated users
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['?'],
+                        'actions' => ['feed'],
+                    ]
+                    // everything else is denied
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -123,8 +141,44 @@ class CommentController extends AppController
         }
     }
 
-    public function actionTest(){
-        $comments = Comment::findRecentComments(2,1);
-        var_dump($comments);exit;
+    public function actionFeed(){
+        if(isset($_GET['pid'])){
+            $projectId = intval($_GET['pid']);
+        }else{
+            $projectId = null;
+        }
+
+        $comments = Comment::findRecentComments(20,$projectId);
+
+        /**
+         * Create the parent feed
+         */
+        $feed = new Feed;
+        $feed->setTitle("Trackstar Project Comments Feed");
+        $feed->setLink(Yii::$app->urlManager->createUrl($this->route));
+        $feed->setDescription('Trackstar Project Comments Feed Description');
+        $feed->setEncoding('UTF-8');
+
+        foreach ($comments as $comment){
+            $entry = $feed->createEntry();
+            $entry->setTitle($comment['issueName']);
+            $entry->setLink(Yii::$app->urlManager->createAbsoluteUrl(['issue/view', 'id'=>$comment['issueId']]));
+            $entry->setDateModified(time());
+            $entry->setDateCreated(time());
+            $entry->setDescription($comment['author'].' says: '.$comment['content']);
+            $entry->addAuthor([
+                'name'  => $comment['author'],
+            ]);
+            $feed->addEntry($entry);
+        }
+
+
+        /**
+         * Render the resulting feed to Atom 1.0 and assign to $out.
+         * You can substitute "atom" with "rss" to generate an RSS 2.0 feed.
+         */
+        $out = $feed->export('rss');
+
+        return $out;
     }
 }

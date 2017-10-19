@@ -93,7 +93,8 @@ class Comment extends CommonActiveRecord
             ->select(
                 User::tableName().'.username as author,'
                 .Issue::tableName().'.name as issueName,'
-                .Issue::tableName().'.id as issueId'
+                .Issue::tableName().'.id as issueId,'
+                .Comment::tableName().'.content'
             )->from(Comment::tableName())
             ->innerJoin(Issue::tableName(), Comment::tableName().'.issue_id='.Issue::tableName().'.id')
             ->innerJoin(User::tableName(), Comment::tableName().'.create_user_id='.Issue::tableName().'.id')
