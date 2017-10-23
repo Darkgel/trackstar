@@ -50,6 +50,12 @@ class ProjectController extends AppController
             'query' => $projects = Project::find(),
         ]);
 
+        Yii::$app->view->registerLinkTag([
+            'rel' => 'alternate',
+            'type' => 'application/rss+xml',
+            'href' => '/commentfeed.xml',
+        ]);
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
@@ -84,6 +90,12 @@ class ProjectController extends AppController
 
         $members = new ActiveDataProvider([
             'query' => $query,
+        ]);
+
+        Yii::$app->view->registerLinkTag([
+            'rel' => 'alternate',
+            'type' => 'application/rss+xml',
+            'href' => Yii::$app->urlManager->createUrl(['comment/feed', 'pid'=>$id]),
         ]);
 
         return $this->render('view', [
