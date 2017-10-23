@@ -11,6 +11,7 @@ use app\models\form\ContactForm;
 
 class SiteController extends Controller
 {
+    public $defaultAction = 'login';
     /**
      * @inheritdoc
      */
