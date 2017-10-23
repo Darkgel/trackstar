@@ -83,6 +83,10 @@ class SiteController extends Controller
      * 通过本地密码验证方式登录
      */
     public function loginByLocalAuth(){
+        if(!Yii::$app->user->isGuest){
+            return $this->redirect(Yii::$app->homeUrl);
+        }
+
         $model = new LoginFormByLocalAuth();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
