@@ -49,6 +49,11 @@ $config = [
             'rules' => require(__DIR__.'/url.php'),
         ],
     ],
+    'modules' => [
+        'admin' => [
+            'class' => 'app\modules\admin\AdminModule',
+        ],
+    ],
     'params' => $params,
 ];
 
