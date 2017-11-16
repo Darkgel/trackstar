@@ -25,9 +25,9 @@
         "yiisoft/yii2-debug": "*",
         "yiisoft/yii2-gii": "*",
         "yiisoft/yii2-faker": "*",
-        "codeception/codeception": "^2.3",
         "codeception/specify": "^0.4.6",
-        "codeception/verify": "^0.4.0"
+        "codeception/verify": "^0.4.0",
+        "codeception/codeception": "*"
     },
     "config": {
         "process-timeout": 1800

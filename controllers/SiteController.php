@@ -137,23 +137,23 @@ class SiteController extends Controller
     }
 
     public function actionTest(){
-//        $hash0 = Yii::$app->getSecurity()->generatePasswordHash('demo');
-//        $hash1 = Yii::$app->getSecurity()->generatePasswordHash('darkgel');
-//        echo $hash0.'<br/>'.$hash1;
+        $hash0 = Yii::$app->getSecurity()->generatePasswordHash('demo');
+        $hash1 = Yii::$app->getSecurity()->generatePasswordHash('darkgel');
+        echo $hash0.'<br/>'.$hash1;
 
 //        var_dump(Yii::$app->authManager->getRoles());
 
-        $users = \app\models\ar\User::find()->all();
-        $usernames = [];
-        foreach ($users as $user){
-            $usernames[] = $user->username;
-        }
-
-        var_dump($usernames);
-
-        $users = \app\models\ar\User::find()->select('username')->asArray()->all();
-
-        var_dump(\yii\helpers\ArrayHelper::getColumn($users, 'username'));
+//        $users = \app\models\ar\User::find()->all();
+//        $usernames = [];
+//        foreach ($users as $user){
+//            $usernames[] = $user->username;
+//        }
+//
+//        var_dump($usernames);
+//
+//        $users = \app\models\ar\User::find()->select('username')->asArray()->all();
+//
+//        var_dump(\yii\helpers\ArrayHelper::getColumn($users, 'username'));
 
 
     }

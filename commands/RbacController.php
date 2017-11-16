@@ -139,11 +139,11 @@ class RbacController extends Controller
         $assignmentTmp->ruleName = $ruleName;
         $auth->assign($assignmentTmp);
 
-        $user = User::find()->where('username=:username', [':username' => 'test'])->one();
-        $assignmentTmp->userId = $user->id;
-        $assignmentTmp->roleName = 'reader';
-        $assignmentTmp->ruleName = $ruleName;
-        $auth->assign($assignmentTmp);
+//        $user = User::find()->where('username=:username', [':username' => 'test'])->one();
+//        $assignmentTmp->userId = $user->id;
+//        $assignmentTmp->roleName = 'reader';
+//        $assignmentTmp->ruleName = $ruleName;
+//        $auth->assign($assignmentTmp);
     }
 
 }

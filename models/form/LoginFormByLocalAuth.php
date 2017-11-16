@@ -19,7 +19,7 @@ class LoginFormByLocalAuth extends Model
 {
     public $username;
     public $password;
-    public $rememberMe = true;
+    public $rememberMe = false;
 
     /**
      * @var Localauth | bool
